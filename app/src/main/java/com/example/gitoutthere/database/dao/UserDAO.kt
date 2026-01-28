@@ -4,9 +4,10 @@ import androidx.room.*
 import com.example.gitoutthere.database.entities.User
 
 @Dao
+@JvmSuppressWildcards
 interface UserDAO {
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertUser(user: User): Int
+    suspend fun insertUser(user: User): Long
 
     @Query("SELECT * FROM users WHERE username = :username") // Check for users w/ desired username
     suspend fun getUserByUsername(username: String): User?

@@ -4,7 +4,7 @@ import com.example.gitoutthere.database.dao.UserDAO
 import com.example.gitoutthere.database.entities.User
 
 class UserRepository(private val userDAO: UserDAO) {
-    suspend fun createUser(user: User): Result<Int> {
+    suspend fun createUser(user: User): Result<Long> {
         return try {
             if (userDAO.isUsernameExists(user.username)) {
                 return Result.failure(Exception("Username already exists"))

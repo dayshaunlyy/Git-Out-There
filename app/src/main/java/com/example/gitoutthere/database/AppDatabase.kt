@@ -8,7 +8,7 @@ import com.example.gitoutthere.database.dao.UserDAO
 import com.example.gitoutthere.database.entities.User
 
 
-@Database(entities = [User::class], version = 1)
+@Database(entities = [User::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDAO
