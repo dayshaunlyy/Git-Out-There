@@ -20,19 +20,16 @@ import org.junit.Assert.*
 import org.junit.Before
 
 @RunWith(AndroidJUnit4::class)
-class UserRepoTest {
+class UserDaoTest {
 
     private lateinit var database: AppDatabase
     private lateinit var userDao: UserDAO
-    private lateinit var userRepository: UserRepository
-
 
     @Before
     fun setup() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
         userDao = database.userDao()
-        userRepository = UserRepository(userDao)
     }
 
     @After
@@ -41,23 +38,40 @@ class UserRepoTest {
     }
 
     @Test
-    fun createUserTestSuccess() = runBlocking {
+    fun insertUserTestSuccess() = runBlocking {
         val user = User(username = "testuser", password = "password123")
 
-        val result = userRepository.createUser(user)
+        val userId = userDao.insertUser(user)
 
-        assertTrue("Result should be success", result.isSuccess)
+        assertTrue(userId > 0)
     }
 
     @Test
-    fun createUserTestDuplicateUsername() = runBlocking {
-        val user1 = User(username = "testuser", password = "password123")
-        val user2 = User(username = "testuser", password = "password456")
-        userRepository.createUser(user1)
+    fun getUserByUsername_returnsCorrectUser() = runBlocking {
+        val user = User(username = "johndoe", password = "securepass")
+        userDao.insertUser(user)
 
+        val retrievedUser = userDao.getUserByUsername("johndoe")
 
-        val result = userRepository.createUser(user2)
+        assertNotNull(retrievedUser)
+        assertEquals("johndoe", retrievedUser?.username)
+        assertEquals("securepass", retrievedUser?.password)
+    }
 
-        assertTrue("Result should be failure", result.isFailure)
+    @Test
+    fun usernameExistsTest() = runBlocking {
+        val user = User(username = "existinguser", password = "pass123")
+        userDao.insertUser(user)
+
+        val exists = userDao.isUsernameExists("existinguser")
+
+        assertTrue(exists)
+    }
+
+    @Test
+    fun usernameDoesNotExistsTest() = runBlocking {
+        val exists = userDao.isUsernameExists("mysteryman")
+
+        assertFalse(exists)
     }
 }
