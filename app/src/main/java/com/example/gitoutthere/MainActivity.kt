@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             GitOutThereTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Group 4",
+                        name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -33,15 +33,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello, $name!",
+        text = "Main Landing Page",
         modifier = modifier
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GitOutThereTheme {
-        Greeting("Group 4")
-    }
-}
