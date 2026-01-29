@@ -11,28 +11,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
-
+import androidx.activity.viewModels
+import com.example.gitoutthere.auth.LoginViewModel
+import com.example.gitoutthere.auth.LoginViewModelFactory
+import com.example.gitoutthere.database.repository.UserRepository
+import com.example.gitoutthere.database.AppDatabase
 class LoginActivity : ComponentActivity() {
+
+    private val viewModel: LoginViewModel by viewModels {
+        val db = AppDatabase.getInstance(applicationContext)
+        val repo = UserRepository(db.userDao())
+        LoginViewModelFactory(repo)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             GitOutThereTheme {
-                LoginScreen(
-                    onLoginClick = {
-                        // 👉 THIS OPENS MAIN ACTIVITY
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                LoginScreen { username, password ->
+                    viewModel.login(username, password) { ok ->
+                        if (ok) {
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            finish()
+                        }
                     }
-                )
+                }
             }
         }
     }
 }
 
 @Composable
-fun LoginScreen(onLoginClick: () -> Unit) {
+fun LoginScreen(onLoginClick: (String, String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -63,7 +73,7 @@ fun LoginScreen(onLoginClick: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = onLoginClick,
+            onClick = { onLoginClick(username, password) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Log In")

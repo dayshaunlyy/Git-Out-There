@@ -16,4 +16,14 @@ class UserRepository(private val userDAO: UserDAO) {
             Result.failure(e)
         }
     }
+
+    suspend fun authenticate(username: String, password: String): Boolean {
+        val user = userDAO.getUserByUsername(username) ?: return false
+
+        return verifyPassword(storedPassword = user.password, enteredPassword =password)
+    }
+
+    private fun verifyPassword(storedPassword : String, enteredPassword: String) : Boolean {
+        return storedPassword == enteredPassword
+    }
 }
