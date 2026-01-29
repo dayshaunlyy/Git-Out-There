@@ -32,7 +32,7 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen(onLoginClick: () -> Unit) {
+fun LoginScreen(onLoginClick: (String, String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -63,7 +63,7 @@ fun LoginScreen(onLoginClick: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = onLoginClick,
+            onClick = { onLoginClick(username, password) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Log In")
