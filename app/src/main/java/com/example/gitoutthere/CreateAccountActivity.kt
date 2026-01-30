@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
 import androidx.activity.viewModels
+import androidx.compose.ui.platform.LocalContext
 import com.example.gitoutthere.auth.CreateAccountViewModel
 import com.example.gitoutthere.auth.CreateAccountViewModelFactory
 import com.example.gitoutthere.database.repository.UserRepository
@@ -48,6 +49,7 @@ class CreateAccountActivity : ComponentActivity() {
 fun CreateAccountScreen(onCreateAccountClick: (String, String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -86,6 +88,15 @@ fun CreateAccountScreen(onCreateAccountClick: (String, String) -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Create Account")
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        OutlinedButton(
+            onClick = { context.startActivity(Intent(context, LoginActivity::class.java)) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Cancel")
         }
     }
 }
