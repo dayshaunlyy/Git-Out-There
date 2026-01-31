@@ -2,6 +2,7 @@ package com.example.gitoutthere
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,11 +34,16 @@ class CreateAccountActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             GitOutThereTheme {
-                CreateAccountScreen { username, password ->
-                    viewModel.createAccount(username, password) { ok ->
-                        if (ok) {
-                            startActivity(Intent(this@CreateAccountActivity, MainActivity::class.java))
+                var usernameError by remember { mutableStateOf<String?>(null) }
+                CreateAccountScreen(usernameError = usernameError) { username, password ->
+                    viewModel.createAccount(username, password) { error ->
+                        if (error == null) {
+                            val intent = Intent(this@CreateAccountActivity, MainActivity::class.java)
+                            intent.putExtra("USER_CREATED_USERNAME", username)
+                            startActivity(intent)
                             finish()
+                        } else {
+                            usernameError = error
                         }
                     }
                 }
@@ -46,7 +53,10 @@ class CreateAccountActivity : ComponentActivity() {
 }
 
 @Composable
-fun CreateAccountScreen(onCreateAccountClick: (String, String) -> Unit) {
+fun CreateAccountScreen(
+    usernameError: String?,
+    onCreateAccountClick: (String, String) -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -68,8 +78,16 @@ fun CreateAccountScreen(onCreateAccountClick: (String, String) -> Unit) {
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = usernameError != null
         )
+        usernameError?.let {
+            Text(
+                text = it,
+                color = Color.Red,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -105,6 +123,6 @@ fun CreateAccountScreen(onCreateAccountClick: (String, String) -> Unit) {
 @Composable
 fun CreateAccountScreenPreview() {
     GitOutThereTheme {
-        CreateAccountScreen { _, _ -> }
+        CreateAccountScreen(usernameError = null) { _, _ -> }
     }
 }

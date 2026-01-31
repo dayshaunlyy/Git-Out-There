@@ -1,6 +1,7 @@
 package com.example.gitoutthere
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +18,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        intent.getStringExtra("USER_CREATED_USERNAME")?.let { username ->
+            Toast.makeText(this, "$username's account successfully created", Toast.LENGTH_LONG).show()
+        }
+
         setContent {
             GitOutThereTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
