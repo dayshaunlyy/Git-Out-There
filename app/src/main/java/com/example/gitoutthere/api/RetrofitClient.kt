@@ -2,7 +2,6 @@ package com.example.gitoutthere.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.example.gitoutthere.api.GitHubApi
 
 object RetrofitClient {
     private const val BASE_URL = "https://api.github.com/"
