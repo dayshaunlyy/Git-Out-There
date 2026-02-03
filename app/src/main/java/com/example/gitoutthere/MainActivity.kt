@@ -2,6 +2,7 @@ package com.example.gitoutthere
 
 import android.os.Bundle
 import android.widget.Toast
+import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,9 +27,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             GitOutThereTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    MainScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        onLogout = {
+                            val intent = Intent(this, LoginActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     )
                 }
             }
@@ -37,10 +42,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Main Landing Page",
+fun MainScreen(onLogout: () -> Unit, modifier: Modifier = Modifier) {
+    androidx.compose.material3.Button(
+        onClick = onLogout,
         modifier = modifier
-    )
+    ){
+        Text("Logout")
+    }
 }
 
