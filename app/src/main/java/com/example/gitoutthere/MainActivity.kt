@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
 
@@ -45,7 +46,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(onLogout: () -> Unit, modifier: Modifier = Modifier) {
     androidx.compose.material3.Button(
         onClick = onLogout,
-        modifier = modifier
+        modifier = modifier.testTag("logout_button")
     ){
         Text("Logout")
     }
