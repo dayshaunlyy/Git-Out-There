@@ -10,8 +10,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.gitoutthere.api.RepoViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.LaunchedEffect
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
+import com.example.gitoutthere.api.RepoViewModelFactory
+import com.example.gitoutthere.api.GitHubRepository
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +29,7 @@ class MainActivity : ComponentActivity() {
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
+                    RepoScreen()
                 }
             }
         }
@@ -36,5 +42,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Main Landing Page",
         modifier = modifier
     )
+}
+
+@Composable
+fun RepoScreen(){
+
+    val vm : RepoViewModel = viewModel( factory = RepoViewModelFactory(GitHubRepository()))
+
+    LaunchedEffect(Unit){
+        vm.load()
+    }
+    Text("Repo Landing Page")
 }
 
