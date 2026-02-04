@@ -29,6 +29,6 @@ class LogoutTest {
             .onNodeWithTag("logout_button")
             .performClick()
 
-        assertTrue(logoutCalled)
+        assertTrue("Successfully logged out", logoutCalled)
     }
 }
