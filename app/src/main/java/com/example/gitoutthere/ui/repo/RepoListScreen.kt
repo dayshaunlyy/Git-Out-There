@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gitoutthere.api.RepoDto
 import com.example.gitoutthere.api.RepoViewModel
+import com.example.gitoutthere.ui.readme.MarkdownView
 import com.example.gitoutthere.ui.readme.ReadmeViewModel
 
 
@@ -73,10 +72,9 @@ fun RepoListScreen(
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-                    .verticalScroll(rememberScrollState())
             ) {
                 if (readmeContent != null) {
-                    Text(text = readmeContent!!)
+                    MarkdownView(markdown = readmeContent!!)
                 } else {
                     CircularProgressIndicator()
                 }
