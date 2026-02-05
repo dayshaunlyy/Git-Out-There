@@ -12,6 +12,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
 import androidx.activity.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gitoutthere.api.GitHubRepository
+import com.example.gitoutthere.api.RepoViewModel
+import com.example.gitoutthere.api.RepoViewModelFactory
 import com.example.gitoutthere.auth.LoginViewModel
 import com.example.gitoutthere.auth.LoginViewModelFactory
 import com.example.gitoutthere.database.repository.UserRepository
@@ -36,6 +40,7 @@ class LoginActivity : ComponentActivity() {
                         }
                     }
                 }
+                RepoScreeen()
             }
         }
     }
@@ -80,3 +85,14 @@ fun LoginScreen(onLoginClick: (String, String) -> Unit) {
         }
     }
 }
+@Composable
+fun RepoScreeen(){
+
+    val vm : RepoViewModel = viewModel( factory = RepoViewModelFactory(GitHubRepository()))
+
+    LaunchedEffect(Unit){
+        vm.load()
+    }
+    Text("Repo Landing Page")
+}
+
