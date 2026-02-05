@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -24,7 +27,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gitoutthere.api.RepoDto
 import com.example.gitoutthere.api.RepoViewModel
-import com.example.gitoutthere.ui.readme.ReadmeView
 import com.example.gitoutthere.ui.readme.ReadmeViewModel
 
 
@@ -38,7 +40,7 @@ fun RepoListScreen(
     val repos by repoViewModel.repos.collectAsState()
     var selectedRepo by remember { mutableStateOf<RepoDto?>(null) }
     val sheetState = rememberModalBottomSheetState()
-    val readme by readmeViewModel.readme.collectAsState()
+    val readmeContent by readmeViewModel.readmeContent.collectAsState()
 
     // Trigger the load
     LaunchedEffect(Unit) {
@@ -68,7 +70,17 @@ fun RepoListScreen(
             sheetState = sheetState,
             modifier = Modifier.fillMaxSize()
         ) {
-            readme?.html_url?.let { ReadmeView(url = it) }
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                if (readmeContent != null) {
+                    Text(text = readmeContent!!)
+                } else {
+                    CircularProgressIndicator()
+                }
+            }
         }
     }
 }
