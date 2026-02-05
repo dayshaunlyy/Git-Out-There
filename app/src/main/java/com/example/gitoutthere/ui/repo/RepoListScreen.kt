@@ -2,6 +2,7 @@ package com.example.gitoutthere.ui.repo
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,17 +24,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gitoutthere.api.RepoDto
 import com.example.gitoutthere.api.RepoViewModel
+import com.example.gitoutthere.ui.readme.ReadmeView
+import com.example.gitoutthere.ui.readme.ReadmeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RepoListScreen(
     isGuest: Boolean,
-    repoViewModel: RepoViewModel = viewModel()
+    repoViewModel: RepoViewModel = viewModel(),
+    readmeViewModel: ReadmeViewModel = viewModel()
 ) {
     val repos by repoViewModel.repos.collectAsState()
     var selectedRepo by remember { mutableStateOf<RepoDto?>(null) }
     val sheetState = rememberModalBottomSheetState()
+    val readme by readmeViewModel.readme.collectAsState()
 
     // Trigger the load
     LaunchedEffect(Unit) {
@@ -50,18 +55,20 @@ fun RepoListScreen(
             }
         }
         items(repos) { repo ->
-            RepoItem(repo = repo, onClick = { selectedRepo = repo })
+            RepoItem(repo = repo, onClick = { 
+                selectedRepo = repo
+                readmeViewModel.loadReadme(repo.owner.login, repo.name)
+            })
         }
     }
 
     if (selectedRepo != null) {
         ModalBottomSheet(
             onDismissRequest = { selectedRepo = null },
-            sheetState = sheetState
+            sheetState = sheetState,
+            modifier = Modifier.fillMaxSize()
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = "README for ${selectedRepo?.name}")
-            }
+            readme?.html_url?.let { ReadmeView(url = it) }
         }
     }
 }
