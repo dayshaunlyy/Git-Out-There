@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,9 +71,11 @@ fun RepoListScreen(
             sheetState = sheetState,
             modifier = Modifier.fillMaxSize()
         ) {
+            val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
                     .padding(16.dp)
+                    .verticalScroll(scrollState)
             ) {
                 if (readmeContent != null) {
                     MarkdownView(markdown = readmeContent!!)
