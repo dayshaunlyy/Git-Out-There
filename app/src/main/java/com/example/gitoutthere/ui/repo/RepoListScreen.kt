@@ -12,18 +12,32 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gitoutthere.api.RepoDto
 import com.example.gitoutthere.api.RepoViewModel
 
+
 @Composable
-fun RepoListScreen(repoViewModel: RepoViewModel = viewModel()) {
+fun RepoListScreen(
+    isGuest: Boolean,
+    repoViewModel: RepoViewModel = viewModel()) {
     val repos by repoViewModel.repos.collectAsState()
 
     // Trigger the load
-    repoViewModel.load()
+    LaunchedEffect(Unit) {
+        repoViewModel.load()
+}
 
     LazyColumn {
+        if (isGuest){
+            item{
+                Text(
+                    text="Browsing as Guest",
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+        }
         items(repos) { repo ->
             RepoItem(repo = repo)
         }

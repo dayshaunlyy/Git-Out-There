@@ -23,6 +23,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val isGuest = intent.getStringExtra("USER_TYPE") == "GUEST"
+
         intent.getStringExtra("USER_CREATED_USERNAME")?.let { username ->
             Toast.makeText(this, "$username's account successfully created", Toast.LENGTH_LONG).show()
         }
@@ -30,7 +32,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             GitOutThereTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
-                    RepoListScreen()
+                    RepoListScreen(isGuest = isGuest)
                 }
             }
         }
