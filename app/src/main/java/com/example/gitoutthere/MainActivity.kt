@@ -15,7 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.material3.Button
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.gitoutthere.api.RepoViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.LaunchedEffect
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
+import com.example.gitoutthere.api.RepoViewModelFactory
+import com.example.gitoutthere.api.GitHubRepository
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +43,7 @@ class MainActivity : ComponentActivity() {
                             finish()
                         }
                     )
+                    RepoScreen()
                 }
             }
         }
@@ -51,5 +58,16 @@ fun MainScreen(onLogout: () -> Unit, modifier: Modifier = Modifier) {
     ){
         Text("Logout")
     }
+}
+
+@Composable
+fun RepoScreen(){
+
+    val vm : RepoViewModel = viewModel( factory = RepoViewModelFactory(GitHubRepository()))
+
+    LaunchedEffect(Unit){
+        vm.load()
+    }
+    Text("Repo Landing Page")
 }
 
