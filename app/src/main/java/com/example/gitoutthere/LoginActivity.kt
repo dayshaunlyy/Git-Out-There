@@ -89,5 +89,20 @@ fun LoginScreen(onLoginClick: (String, String) -> Unit) {
         ) {
             Text("Create Account")
         }
+        Spacer(modifier = Modifier.height(4.dp))
+
+        TextButton(
+            onClick = {
+                // Navigate as guest
+                context.startActivity(
+                    Intent(context, MainActivity::class.java).apply {
+                        putExtra("USER_TYPE", "GUEST")
+                    }
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Log in as Guest")
+        }
     }
 }
