@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
@@ -45,6 +46,7 @@ class LoginActivity : ComponentActivity() {
 fun LoginScreen(onLoginClick: (String, String) -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -77,6 +79,15 @@ fun LoginScreen(onLoginClick: (String, String) -> Unit) {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Log In")
+        }
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        OutlinedButton(
+            onClick = { context.startActivity(Intent(context, CreateAccountActivity::class.java)) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Create Account")
         }
     }
 }
