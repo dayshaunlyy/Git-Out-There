@@ -6,4 +6,6 @@ class GitHubRepository (private val api : GitHubApi = RetrofitClient.api){
 
     suspend fun getReadme(owner: String, repo: String) = api.getReadme(owner, repo)
 
+    suspend fun getIssues(owner: String, repo: String) = api.getIssues(owner, repo)
+
 }

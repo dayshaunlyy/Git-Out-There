@@ -20,4 +20,10 @@ interface GitHubApi {
         @Path("owner") owner: String,
         @Path("repo") repo: String
     ): ReadmeDto
+
+    @GET("repos/{owner}/{repo}/issues")
+    suspend fun getIssues(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): List<IssueDto>
 }
