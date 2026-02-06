@@ -24,6 +24,7 @@ interface GitHubApi {
     @GET("repos/{owner}/{repo}/issues")
     suspend fun getIssues(
         @Path("owner") owner: String,
-        @Path("repo") repo: String
+        @Path("repo") repo: String,
+        @Query("state") state: String = "open"
     ): List<IssueDto>
 }
