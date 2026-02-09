@@ -1,7 +1,8 @@
 package com.example.gitoutthere.api
 
-import retrofit2.http.Query
 import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface GitHubApi {
 
@@ -12,5 +13,11 @@ interface GitHubApi {
         @Query("order") order: String? = null,
         @Query("per_page") perPage: Int = 30,
         @Query("page") page: Int = 1
-        ): RepoSearchResponse
+    ): RepoSearchResponse
+
+    @GET("repos/{owner}/{repo}/readme")
+    suspend fun getReadme(
+        @Path("owner") owner: String,
+        @Path("repo") repo: String
+    ): ReadmeDto
 }
