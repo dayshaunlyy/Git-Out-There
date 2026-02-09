@@ -17,6 +17,7 @@ import com.example.gitoutthere.auth.LoginViewModel
 import com.example.gitoutthere.auth.LoginViewModelFactory
 import com.example.gitoutthere.database.repository.UserRepository
 import com.example.gitoutthere.database.AppDatabase
+import android.widget.Toast
 class LoginActivity : ComponentActivity() {
 
     private val viewModel: LoginViewModel by viewModels {
@@ -34,6 +35,9 @@ class LoginActivity : ComponentActivity() {
                         if (ok) {
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                             finish()
+                        }
+                        else{
+                            Toast.makeText(this, "Incorrect username or password", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
