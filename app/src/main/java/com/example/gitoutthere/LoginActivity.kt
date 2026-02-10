@@ -16,14 +16,16 @@ import androidx.activity.viewModels
 import com.example.gitoutthere.auth.LoginViewModel
 import com.example.gitoutthere.auth.LoginViewModelFactory
 import com.example.gitoutthere.database.repository.UserRepository
+import com.example.gitoutthere.database.repository.SessionRepository
 import com.example.gitoutthere.database.AppDatabase
 import android.widget.Toast
 class LoginActivity : ComponentActivity() {
 
     private val viewModel: LoginViewModel by viewModels {
         val db = AppDatabase.getInstance(applicationContext)
-        val repo = UserRepository(db.userDao())
-        LoginViewModelFactory(repo)
+        val userRepo = UserRepository(db.userDao())
+        val sessionRepo = SessionRepository(db.sessionDao())
+        LoginViewModelFactory(userRepo, sessionRepo)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
