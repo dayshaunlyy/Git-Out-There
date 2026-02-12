@@ -6,11 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.gitoutthere.database.dao.UserDAO
 import com.example.gitoutthere.database.entities.User
+import com.example.gitoutthere.database.entities.FavoriteRepo
+import com.example.gitoutthere.database.dao.FavoriteRepoDao
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [User::class],[FavoriteRepo::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDAO
+    abstract fun favoriteRepoDao(): FavoriteRepoDao
 
     companion object {
         private const val DATABASE_NAME = "app_database"

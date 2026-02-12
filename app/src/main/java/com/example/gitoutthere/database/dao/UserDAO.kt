@@ -15,5 +15,6 @@ interface UserDAO {
     @Query("SELECT EXISTS(SELECT 1 FROM users WHERE username = :username)")
     suspend fun isUsernameExists(username: String): Boolean
 
-    //TODO: @Query for getting user(s)
+    @Query("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")
+    suspend fun getUser(username: String, password: String): User?
 }
