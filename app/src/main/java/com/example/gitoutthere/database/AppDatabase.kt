@@ -10,10 +10,17 @@ import com.example.gitoutthere.database.entities.FavoriteRepo
 import com.example.gitoutthere.database.dao.FavoriteRepoDao
 
 @Database(entities = [User::class],[FavoriteRepo::class], version = 1, exportSchema = false)
+import com.example.gitoutthere.database.entities.Session
+import com.example.gitoutthere.database.dao.SessionDAO
+
+
+@Database(entities = [User::class, Session::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDAO
     abstract fun favoriteRepoDao(): FavoriteRepoDao
+
+    abstract fun sessionDao(): SessionDAO
 
     companion object {
         private const val DATABASE_NAME = "app_database"
