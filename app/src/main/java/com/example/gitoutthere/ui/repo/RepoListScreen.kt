@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gitoutthere.api.RepoDto
 import com.example.gitoutthere.api.RepoViewModel
@@ -53,6 +54,7 @@ fun RepoListScreen(
     repoViewModel: RepoViewModel = viewModel(),
     readmeViewModel: ReadmeViewModel = viewModel()
 ) {
+
     val repos by repoViewModel.repos.collectAsState()
     var selectedRepo by remember { mutableStateOf<RepoDto?>(null) }
     val sheetState = rememberModalBottomSheetState()
@@ -66,6 +68,7 @@ fun RepoListScreen(
 
     LaunchedEffect(userId) {
         repoViewModel.load()
+        if (!isGuest) {
             favorites = favoriteRepoRepository.getFavorites(userId)
         }
     }
