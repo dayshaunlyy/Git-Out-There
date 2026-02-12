@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val userId = intent.getIntExtra("USER_ID", -1)
         val isGuest = intent.getStringExtra("USER_TYPE") == "GUEST"
 
         intent.getStringExtra("USER_CREATED_USERNAME")?.let { username ->
@@ -52,6 +53,8 @@ class MainActivity : ComponentActivity() {
                             finish()
                         })
 
+                        userId = userId
+                    )
                 }
             }
         }

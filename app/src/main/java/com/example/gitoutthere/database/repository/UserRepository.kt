@@ -26,4 +26,7 @@ class UserRepository(private val userDAO: UserDAO) {
     private fun verifyPassword(storedPassword : String, enteredPassword: String) : Boolean {
         return storedPassword == enteredPassword
     }
-}
+
+    suspend fun getUser(username: String, password: String): User? {
+        return userDAO.getUser(username, password)
+    }}
