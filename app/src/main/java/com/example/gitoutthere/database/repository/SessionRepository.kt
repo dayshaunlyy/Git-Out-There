@@ -8,6 +8,8 @@ class SessionRepository( private val sessionDao: SessionDAO) {
     suspend fun save( username: String) =
         sessionDao.insertSession( Session(username = username))
 
+    suspend fun getSession(): Session? = sessionDao.getSession()
+
     suspend fun clear() = sessionDao.clear()
 
 }

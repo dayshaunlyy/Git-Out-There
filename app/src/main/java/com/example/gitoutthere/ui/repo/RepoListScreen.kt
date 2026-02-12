@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,6 +40,7 @@ import com.example.gitoutthere.ui.readme.ReadmeViewModel
 @Composable
 fun RepoListScreen(
     isGuest: Boolean,
+    onLogout: () -> Unit,
     repoViewModel: RepoViewModel = viewModel(),
     readmeViewModel: ReadmeViewModel = viewModel()
 ) {
@@ -51,21 +54,35 @@ fun RepoListScreen(
         repoViewModel.load()
     }
 
-    LazyColumn {
-        if (isGuest) {
-            item {
-                Text(
-                    text = "Browsing as Guest",
-                    modifier = Modifier.padding(8.dp)
-                )
+    Column {
+        if (!isGuest) {
+            Button(
+                onClick = onLogout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .testTag("logout_button")
+            ) {
+                Text("Log Out")
             }
         }
-        items(repos) { repo ->
-            RepoItem(repo = repo, onClick = { 
-                selectedRepo = repo
-                selectedTab = 0 // Reset to README tab
-                readmeViewModel.loadReadme(repo.owner.login, repo.name)
-            })
+
+        LazyColumn {
+            if (isGuest) {
+                item {
+                    Text(
+                        text = "Browsing as Guest",
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
+            items(repos) { repo ->
+                RepoItem(repo = repo, onClick = { 
+                    selectedRepo = repo
+                    selectedTab = 0 // Reset to README tab
+                    readmeViewModel.loadReadme(repo.owner.login, repo.name)
+                })
+            }
         }
     }
 

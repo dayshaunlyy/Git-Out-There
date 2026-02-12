@@ -27,11 +27,14 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.gitoutthere.auth.LoginViewModel
 import com.example.gitoutthere.auth.LoginViewModelFactory
 import com.example.gitoutthere.database.AppDatabase
+import com.example.gitoutthere.database.repository.SessionRepository
 import com.example.gitoutthere.database.repository.UserRepository
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
+import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {
 
@@ -41,10 +44,22 @@ class LoginActivity : ComponentActivity() {
         LoginViewModelFactory(repo)
     }
 
+    private val sessionRepository by lazy {
+        SessionRepository(AppDatabase.getInstance(this).sessionDao())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            if (sessionRepository.getSession() != null) {
+                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                finish()
+            }
+        }
+
         setContent {
-            var error by remember { mutableStateOf<String?> (null) }
+            var error by remember { mutableStateOf<String?>(null) }
 
             GitOutThereTheme {
                 LoginScreen(
@@ -52,8 +67,11 @@ class LoginActivity : ComponentActivity() {
                     onLoginClick = { username, password ->
                         viewModel.login(username, password) { ok ->
                             if (ok) {
-                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                                finish()
+                                lifecycleScope.launch {
+                                    sessionRepository.save(username)
+                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                    finish()
+                                }
                             } else {
                                 error = "Invalid username or password"
                             }

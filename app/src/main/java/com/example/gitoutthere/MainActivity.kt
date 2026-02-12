@@ -17,6 +17,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.LaunchedEffect
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
 import com.example.gitoutthere.ui.repo.RepoListScreen
+import com.example.gitoutthere.database.AppDatabase
+import com.example.gitoutthere.database.repository.SessionRepository
+import com.example.gitoutthere.ui.theme.GitOutThereTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,10 +35,23 @@ class MainActivity : ComponentActivity() {
             Toast.makeText(this, "$username's account successfully created", Toast.LENGTH_LONG).show()
         }
 
+        val sessionRepository = SessionRepository(AppDatabase.getInstance(this).sessionDao())
+
         setContent {
             GitOutThereTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
-                    RepoListScreen(isGuest = isGuest)
+                    RepoListScreen(
+                        isGuest = isGuest,
+                        onLogout = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                sessionRepository.clear()
+                            }
+                            val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        })
+
                 }
             }
         }

@@ -14,7 +14,6 @@ import com.example.gitoutthere.database.dao.SessionDAO
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDAO
-
     abstract fun sessionDao(): SessionDAO
 
     companion object {
