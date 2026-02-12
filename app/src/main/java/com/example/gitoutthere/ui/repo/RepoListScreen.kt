@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -25,6 +26,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -59,10 +62,34 @@ fun RepoListScreen(
     val db = AppDatabase.getInstance(context)
     val favoriteRepoRepository = FavoriteRepository(db.favoriteRepoDao())
     var favorites by remember { mutableStateOf<List<FavoriteRepo>>(emptyList()) }
+    var toggleFavoriteRequest by remember { mutableStateOf<Pair<RepoDto, Boolean>?>(null) }
 
-    LaunchedEffect(Unit) {
-        favorites = favoriteRepoRepository.getFavorites(userId)
+    LaunchedEffect(userId) {
         repoViewModel.load()
+            favorites = favoriteRepoRepository.getFavorites(userId)
+        }
+    }
+    LaunchedEffect(toggleFavoriteRequest) {
+        toggleFavoriteRequest?.let { (repo, isFavorite) ->
+
+            if (!isGuest) {
+                if (isFavorite) {
+                    favoriteRepoRepository.removeFavorite(userId, repo.id.toInt())
+                } else {
+                    favoriteRepoRepository.addFavorite(
+                        FavoriteRepo(
+                            userId = userId,
+                            repoId = repo.id.toInt(),
+                            name = repo.name,
+                            description = repo.description,
+                            url = repo.htmlUrl
+                        )
+                    )
+                }
+                favorites = favoriteRepoRepository.getFavorites(userId)
+            }
+            toggleFavoriteRequest = null
+        }
     }
 
     LazyColumn {
@@ -74,30 +101,16 @@ fun RepoListScreen(
                 )
             }
         }
+
         items(repos) { repo ->
-            val isFavorite = favorites.any { it.repoId == repo.id }
+            val isFavorite = favorites.any { it.repoId == repo.id.toInt() }
 
             RepoItem(
                 repo = repo,
                 isFavorite = isFavorite,
                 onFavoriteToggle = {
-                    // toggle favorite in DB
-                    if (isFavorite) {
-                        favoriteRepoRepository.LaunchedEffect(userId, repo.id)
-                    } else {
-                        favoriteRepoRepository.addFavorite(
-                            FavoriteRepo(
-                                userId = userId,
-                                repoId = repo.id,
-                                name = repo.name,
-                                description = repo.description,
-                                url = repo.html_url
-                            )
-                        )
-                    }
-
-                    // reload favorites
-                    favorites = favoriteRepoRepository.getFavorites(userId)
+                    // trigger coroutine via LaunchedEffect
+                    toggleFavoriteRequest = Pair(repo, isFavorite)
                 },
                 onClick = {
                     selectedRepo = repo
@@ -125,6 +138,7 @@ fun RepoListScreen(
                         )
                     }
                 }
+
                 when (selectedTab) {
                     0 -> {
                         val scrollState = rememberScrollState()
@@ -153,7 +167,12 @@ fun RepoListScreen(
 }
 
 @Composable
-fun RepoItem(repo: RepoDto, isFavorite: Boolean, onFavoriteToggle: () -> Unit, onClick: () -> Unit) {
+fun RepoItem(
+    repo: RepoDto,
+    isFavorite: Boolean,
+    onFavoriteToggle: () -> Unit,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
