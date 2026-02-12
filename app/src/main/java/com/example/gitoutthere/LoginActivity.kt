@@ -12,15 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -34,7 +37,9 @@ import com.example.gitoutthere.database.AppDatabase
 import com.example.gitoutthere.database.repository.SessionRepository
 import com.example.gitoutthere.database.repository.UserRepository
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : ComponentActivity() {
 
@@ -51,33 +56,48 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            if (sessionRepository.getSession() != null) {
-                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                finish()
-            }
-        }
-
         setContent {
-            var error by remember { mutableStateOf<String?>(null) }
+            var showLogin by remember { mutableStateOf(false) }
 
-            GitOutThereTheme {
-                LoginScreen(
-                    error = error,
-                    onLoginClick = { username, password ->
-                        viewModel.login(username, password) { ok ->
-                            if (ok) {
-                                lifecycleScope.launch {
-                                    sessionRepository.save(username)
-                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                                    finish()
+            LaunchedEffect(Unit) {
+                val session = withContext(Dispatchers.IO) { sessionRepository.getSession() }
+                if (session != null) {
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    finish()
+                } else {
+                    showLogin = true
+                }
+            }
+
+            if (showLogin) {
+                var error by remember { mutableStateOf<String?>(null) }
+
+                GitOutThereTheme {
+                    LoginScreen(
+                        error = error,
+                        onLoginClick = { username, password ->
+                            viewModel.login(username, password) { ok ->
+                                if (ok) {
+                                    lifecycleScope.launch {
+                                        withContext(Dispatchers.IO) { sessionRepository.save(username) }
+                                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                        finish()
+                                    }
+                                } else {
+                                    error = "Invalid username or password"
                                 }
-                            } else {
-                                error = "Invalid username or password"
                             }
                         }
-                    }
-                )
+                    )
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }

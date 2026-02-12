@@ -14,8 +14,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -23,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -32,9 +29,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gitoutthere.api.RepoDto
 import com.example.gitoutthere.api.RepoViewModel
-import com.example.gitoutthere.ui.issues.IssuesScreen
 import com.example.gitoutthere.ui.readme.MarkdownView
 import com.example.gitoutthere.ui.readme.ReadmeViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,8 +45,8 @@ fun RepoListScreen(
     var selectedRepo by remember { mutableStateOf<RepoDto?>(null) }
     val sheetState = rememberModalBottomSheetState()
     val readmeContent by readmeViewModel.readmeContent.collectAsState()
-    var selectedTab by rememberSaveable { mutableStateOf(0) }
 
+    // Trigger the load
     LaunchedEffect(Unit) {
         repoViewModel.load()
     }
@@ -77,9 +74,8 @@ fun RepoListScreen(
                 }
             }
             items(repos) { repo ->
-                RepoItem(repo = repo, onClick = { 
+                RepoItem(repo = repo, onClick = {
                     selectedRepo = repo
-                    selectedTab = 0 // Reset to README tab
                     readmeViewModel.loadReadme(repo.owner.login, repo.name)
                 })
             }
@@ -92,38 +88,16 @@ fun RepoListScreen(
             sheetState = sheetState,
             modifier = Modifier.fillMaxSize()
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                val tabs = listOf("README", "Issues")
-                TabRow(selectedTabIndex = selectedTab) {
-                    tabs.forEachIndexed { index, title ->
-                        Tab(
-                            selected = selectedTab == index,
-                            onClick = { selectedTab = index },
-                            text = { Text(text = title) }
-                        )
-                    }
-                }
-                when (selectedTab) {
-                    0 -> {
-                        val scrollState = rememberScrollState()
-                        Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .verticalScroll(scrollState)
-                        ) {
-                            if (readmeContent != null) {
-                                MarkdownView(markdown = readmeContent!!)
-                            } else {
-                                CircularProgressIndicator()
-                            }
-                        }
-                    }
-                    1 -> {
-                        IssuesScreen(
-                            owner = selectedRepo!!.owner.login,
-                            repo = selectedRepo!!.name
-                        )
-                    }
+            val scrollState = rememberScrollState()
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .verticalScroll(scrollState)
+            ) {
+                if (readmeContent != null) {
+                    MarkdownView(markdown = readmeContent!!)
+                } else {
+                    CircularProgressIndicator()
                 }
             }
         }

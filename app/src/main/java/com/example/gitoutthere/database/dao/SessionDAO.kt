@@ -14,5 +14,5 @@ interface SessionDAO {
     suspend fun getSession(): Session?
 
     @Query("DELETE FROM sessions WHERE sessionId = 1")
-    suspend fun clear()
+    suspend fun clear(): Int
 }

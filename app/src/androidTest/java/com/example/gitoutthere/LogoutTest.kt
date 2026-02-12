@@ -34,6 +34,6 @@ class LogoutTest {
             .onNodeWithTag("logout_button")
             .performClick()
 
-        assertTrue("Logout callback was not called", logoutCalled)
+        assertTrue("Logout callback was called", logoutCalled)
     }
 }
