@@ -21,6 +21,12 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -56,6 +62,7 @@ fun RepoListScreen(
 ) {
 
     val repos by repoViewModel.repos.collectAsState()
+    val favoriteIds = remember { mutableStateListOf<Long>() }
     var selectedRepo by remember { mutableStateOf<RepoDto?>(null) }
     val sheetState = rememberModalBottomSheetState()
     val readmeContent by readmeViewModel.readmeContent.collectAsState()
@@ -180,12 +187,33 @@ fun RepoItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable(onClick = onClick)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = repo.name)
-            repo.description?.let {
-                Text(text = it)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Column {
+                Text(text = repo.name)
+                repo.description?.let {
+                    Text(text = it)
+                }
+            }
+
+            if (!isGuest) {
+                IconButton(onClick = onFavoriteClick) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Favorite",
+                        tint = if (isFavorite)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
