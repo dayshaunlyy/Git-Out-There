@@ -36,11 +36,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gitoutthere.api.RepoDto
 import com.example.gitoutthere.api.RepoViewModel
@@ -57,12 +58,12 @@ import kotlinx.coroutines.launch
 fun RepoListScreen(
     isGuest: Boolean,
     userId: Int,
+    onLogout: () -> Unit,
     repoViewModel: RepoViewModel = viewModel(),
     readmeViewModel: ReadmeViewModel = viewModel()
 ) {
 
     val repos by repoViewModel.repos.collectAsState()
-    val favoriteIds = remember { mutableStateListOf<Long>() }
     var selectedRepo by remember { mutableStateOf<RepoDto?>(null) }
     val sheetState = rememberModalBottomSheetState()
     val readmeContent by readmeViewModel.readmeContent.collectAsState()
@@ -102,32 +103,47 @@ fun RepoListScreen(
         }
     }
 
-    LazyColumn {
-        if (isGuest) {
-            item {
-                Text(
-                    text = "Browsing as Guest",
-                    modifier = Modifier.padding(8.dp)
-                )
+    Column {
+        if (!isGuest) {
+            Button(
+                onClick = onLogout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .testTag("logout_button")
+            ) {
+                Text("Log Out")
             }
         }
 
-        items(repos) { repo ->
-            val isFavorite = favorites.any { it.repoId == repo.id.toInt() }
-
-            RepoItem(
-                repo = repo,
-                isFavorite = isFavorite,
-                onFavoriteToggle = {
-                    // trigger coroutine via LaunchedEffect
-                    toggleFavoriteRequest = Pair(repo, isFavorite)
-                },
-                onClick = {
-                    selectedRepo = repo
-                    selectedTab = 0
-                    readmeViewModel.loadReadme(repo.owner.login, repo.name)
+        LazyColumn {
+            if (isGuest) {
+                item {
+                    Text(
+                        text = "Browsing as Guest",
+                        modifier = Modifier.padding(8.dp)
+                    )
                 }
-            )
+            }
+
+            items(repos) { repo ->
+                val isFavorite = favorites.any { it.repoId == repo.id.toInt() }
+
+                RepoItem(
+                    repo = repo,
+                    isFavorite = isFavorite,
+                    isGuest = isGuest,
+                    onFavoriteToggle = {
+                        // trigger coroutine via LaunchedEffect
+                        toggleFavoriteRequest = Pair(repo, isFavorite)
+                    },
+                    onClick = {
+                        selectedRepo = repo
+                        selectedTab = 0
+                        readmeViewModel.loadReadme(repo.owner.login, repo.name)
+                    }
+                )
+            }
         }
     }
 
@@ -180,6 +196,7 @@ fun RepoListScreen(
 fun RepoItem(
     repo: RepoDto,
     isFavorite: Boolean,
+    isGuest: Boolean,
     onFavoriteToggle: () -> Unit,
     onClick: () -> Unit
 ) {
@@ -193,10 +210,11 @@ fun RepoItem(
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Column {
+            Column(Modifier.weight(1f)) {
                 Text(text = repo.name)
                 repo.description?.let {
                     Text(text = it)
@@ -204,7 +222,7 @@ fun RepoItem(
             }
 
             if (!isGuest) {
-                IconButton(onClick = onFavoriteClick) {
+                IconButton(onClick = onFavoriteToggle) {
                     Icon(
                         imageVector = Icons.Default.Star,
                         contentDescription = "Favorite",
@@ -214,12 +232,6 @@ fun RepoItem(
                             MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Button(onClick = onFavoriteToggle) {
-                Text(if (isFavorite) "Unfavorite" else "Favorite")
             }
         }
     }

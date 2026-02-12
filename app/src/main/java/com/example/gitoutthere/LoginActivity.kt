@@ -44,15 +44,18 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var error by remember { mutableStateOf<String?> (null) }
+            var error by remember { mutableStateOf<String?>(null) }
 
             GitOutThereTheme {
                 LoginScreen(
                     error = error,
                     onLoginClick = { username, password ->
-                        viewModel.login(username, password) { ok ->
-                            if (ok) {
-                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        viewModel.login(username, password) { user ->
+                            if (user != null) {
+                                val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
+                                    putExtra("USER_ID", user.userId)
+                                }
+                                startActivity(intent)
                                 finish()
                             } else {
                                 error = "Invalid username or password"
