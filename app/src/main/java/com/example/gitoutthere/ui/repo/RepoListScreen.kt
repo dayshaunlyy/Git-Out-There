@@ -88,7 +88,7 @@ fun RepoListScreen(
                 onClick = onLogout,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(top = 32.dp, start = 8.dp, end = 8.dp, bottom = 8.dp)
                     .testTag("logout_button")
             ) {
                 Text("Log Out")
