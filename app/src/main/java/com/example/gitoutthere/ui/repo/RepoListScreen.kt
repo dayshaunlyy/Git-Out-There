@@ -100,52 +100,46 @@ fun RepoListScreen(
                     Text("Log Out")
                 }
                 Button(
-                    onClick = { showFavorites = true },
+                    onClick = { showFavorites = !showFavorites },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 4.dp)
                 ) {
-                    Text("View Favorites")
+                    Text(if (showFavorites) "View All" else "View Favorites")
                 }
             }
         }
+
         if (showFavorites) {
-            FavoritesScreen(
-                userId = userId,
-                onBack = { showFavorites = false }
-            )
-            return
-        }
+            FavoritesScreen(userId = userId)
+        } else {
+            LazyColumn {
+                if (isGuest) {
+                    item {
+                        Text(
+                            text = "Browsing as Guest",
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
 
+                items(repos) { repo ->
+                    val isFavorite = favorites.any { it.repoId == repo.id}
 
-
-
-        LazyColumn {
-            if (isGuest) {
-                item {
-                    Text(
-                        text = "Browsing as Guest",
-                        modifier = Modifier.padding(8.dp)
+                    RepoItem(
+                        repo = repo,
+                        isFavorite = isFavorite,
+                        isGuest = isGuest,
+                        onFavoriteToggle = {
+                            favoritesViewModel.toggleFavorite(userId, repo)
+                        },
+                        onClick = {
+                            selectedRepo = repo
+                            selectedTab = 0
+                            readmeViewModel.loadReadme(repo.owner.login, repo.name)
+                        }
                     )
                 }
-            }
-
-            items(repos) { repo ->
-                val isFavorite = favorites.any { it.repoId == repo.id}
-
-                RepoItem(
-                    repo = repo,
-                    isFavorite = isFavorite,
-                    isGuest = isGuest,
-                    onFavoriteToggle = {
-                        favoritesViewModel.toggleFavorite(userId, repo)
-                    },
-                    onClick = {
-                        selectedRepo = repo
-                        selectedTab = 0
-                        readmeViewModel.loadReadme(repo.owner.login, repo.name)
-                    }
-                )
             }
         }
     }
@@ -243,8 +237,7 @@ fun RepoItem(
 
 @Composable
 fun FavoritesScreen(
-    userId: Int,
-    onBack: () -> Unit
+    userId: Int
 ) {
     val context = LocalContext.current
     val db = AppDatabase.getInstance(context)
@@ -260,33 +253,20 @@ fun FavoritesScreen(
         favoritesViewModel.loadFavorites(userId)
     }
 
-    Column {
-
-        Button(
-            onClick = onBack,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Text("Back")
-        }
-
-        LazyColumn {
-            items(favorites) { favorite ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = favorite.name)
-                        favorite.description?.let {
-                            Text(text = it)
-                        }
+    LazyColumn {
+        items(favorites) { favorite ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = favorite.name)
+                    favorite.description?.let {
+                        Text(text = it)
                     }
                 }
             }
         }
     }
 }
-
