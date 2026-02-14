@@ -8,7 +8,7 @@ data class FavoriteRepo(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val userId: Int,
-    val repoId: Int,
+    val repoId: Long,
     val name: String,
     val description: String?,
     val url: String
