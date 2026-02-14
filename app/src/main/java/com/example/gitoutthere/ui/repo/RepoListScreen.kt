@@ -84,24 +84,29 @@ fun RepoListScreen(
 
     Column {
         if (!isGuest) {
-            Button(
-                onClick = onLogout,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp, start = 8.dp, end = 8.dp, bottom = 8.dp)
-                    .testTag("logout_button")
+                    .padding(top = 32.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Text("Log Out")
-            }
-        }
-        if (!isGuest) {
-            Button(
-                onClick = { showFavorites = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                Text("View Favorites")
+                Button(
+                    onClick = onLogout,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 4.dp)
+                        .testTag("logout_button")
+                ) {
+                    Text("Log Out")
+                }
+                Button(
+                    onClick = { showFavorites = true },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp)
+                ) {
+                    Text("View Favorites")
+                }
             }
         }
         if (showFavorites) {
