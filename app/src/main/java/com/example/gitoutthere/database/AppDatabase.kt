@@ -15,7 +15,7 @@ import com.example.gitoutthere.database.dao.SessionDAO
 
 
 
-@Database(entities = [User::class, Session::class, FavoriteRepo::class], version = 1, exportSchema = false)
+@Database(entities = [User::class, Session::class, FavoriteRepo::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDAO
