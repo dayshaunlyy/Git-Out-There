@@ -9,7 +9,7 @@ class FavoriteRepository(private val dao: FavoriteRepoDao) {
         dao.insert(favorite)
     }
 
-    suspend fun removeFavorite(userId: Int, repoId: Int) {
+    suspend fun removeFavorite(userId: Int, repoId: Long) {
         dao.deleteByRepo(userId, repoId)
     }
 

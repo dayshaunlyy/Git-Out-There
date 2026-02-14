@@ -2,10 +2,8 @@ package com.example.gitoutthere.ui.repo
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -32,8 +30,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,7 +47,7 @@ import com.example.gitoutthere.ui.readme.ReadmeViewModel
 import com.example.gitoutthere.database.AppDatabase
 import com.example.gitoutthere.database.entities.FavoriteRepo
 import com.example.gitoutthere.database.repository.FavoriteRepository
-import kotlinx.coroutines.launch
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,38 +66,21 @@ fun RepoListScreen(
     var selectedTab by rememberSaveable { mutableStateOf(0) }
     val context = LocalContext.current
     val db = AppDatabase.getInstance(context)
-    val favoriteRepoRepository = FavoriteRepository(db.favoriteRepoDao())
-    var favorites by remember { mutableStateOf<List<FavoriteRepo>>(emptyList()) }
-    var toggleFavoriteRequest by remember { mutableStateOf<Pair<RepoDto, Boolean>?>(null) }
+    val favoriteRepository = FavoriteRepository(db.favoriteRepoDao())
+    val favoritesViewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(favoriteRepository))
+    val favorites by favoritesViewModel.favorites.collectAsState()
+    var showFavorites by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(userId) {
         repoViewModel.load()
-        if (!isGuest) {
-            favorites = favoriteRepoRepository.getFavorites(userId)
-        }
-    }
-    LaunchedEffect(toggleFavoriteRequest) {
-        toggleFavoriteRequest?.let { (repo, isFavorite) ->
 
-            if (!isGuest) {
-                if (isFavorite) {
-                    favoriteRepoRepository.removeFavorite(userId, repo.id.toInt())
-                } else {
-                    favoriteRepoRepository.addFavorite(
-                        FavoriteRepo(
-                            userId = userId,
-                            repoId = repo.id.toInt(),
-                            name = repo.name,
-                            description = repo.description,
-                            url = repo.htmlUrl
-                        )
-                    )
-                }
-                favorites = favoriteRepoRepository.getFavorites(userId)
-            }
-            toggleFavoriteRequest = null
+        if (!isGuest) {
+            favoritesViewModel.loadFavorites(userId)
         }
     }
+
+
 
     Column {
         if (!isGuest) {
@@ -115,6 +94,26 @@ fun RepoListScreen(
                 Text("Log Out")
             }
         }
+        if (!isGuest) {
+            Button(
+                onClick = { showFavorites = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text("View Favorites")
+            }
+        }
+        if (showFavorites) {
+            FavoritesScreen(
+                userId = userId,
+                onBack = { showFavorites = false }
+            )
+            return
+        }
+
+
+
 
         LazyColumn {
             if (isGuest) {
@@ -127,15 +126,14 @@ fun RepoListScreen(
             }
 
             items(repos) { repo ->
-                val isFavorite = favorites.any { it.repoId == repo.id.toInt() }
+                val isFavorite = favorites.any { it.repoId == repo.id}
 
                 RepoItem(
                     repo = repo,
                     isFavorite = isFavorite,
                     isGuest = isGuest,
                     onFavoriteToggle = {
-                        // trigger coroutine via LaunchedEffect
-                        toggleFavoriteRequest = Pair(repo, isFavorite)
+                        favoritesViewModel.toggleFavorite(userId, repo)
                     },
                     onClick = {
                         selectedRepo = repo
@@ -227,7 +225,8 @@ fun RepoItem(
                         imageVector = Icons.Default.Star,
                         contentDescription = "Favorite",
                         tint = if (isFavorite)
-                            MaterialTheme.colorScheme.primary
+                            //on toggle gold
+                            Color(0xFFFFC107)
                         else
                             MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -236,3 +235,53 @@ fun RepoItem(
         }
     }
 }
+
+@Composable
+fun FavoritesScreen(
+    userId: Int,
+    onBack: () -> Unit
+) {
+    val context = LocalContext.current
+    val db = AppDatabase.getInstance(context)
+    val favoriteRepository = FavoriteRepository(db.favoriteRepoDao())
+
+    val favoritesViewModel: FavoritesViewModel = viewModel(
+        factory = FavoritesViewModelFactory(favoriteRepository)
+    )
+
+    val favorites by favoritesViewModel.favorites.collectAsState()
+
+    LaunchedEffect(userId) {
+        favoritesViewModel.loadFavorites(userId)
+    }
+
+    Column {
+
+        Button(
+            onClick = onBack,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Text("Back")
+        }
+
+        LazyColumn {
+            items(favorites) { favorite ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(text = favorite.name)
+                        favorite.description?.let {
+                            Text(text = it)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

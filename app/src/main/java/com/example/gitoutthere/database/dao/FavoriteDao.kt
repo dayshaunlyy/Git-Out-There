@@ -11,7 +11,7 @@ interface FavoriteRepoDao {
     suspend fun insert(favorite: FavoriteRepo): Long
 
     @Query("DELETE FROM favorite_repos WHERE userId = :userId AND repoId = :repoId")
-    suspend fun deleteByRepo(userId: Int, repoId: Int) : Int
+    suspend fun deleteByRepo(userId: Int, repoId: Long) : Int
 
     @Query("SELECT * FROM favorite_repos WHERE userId = :userId")
     suspend fun getFavoritesForUser(userId: Int): List<FavoriteRepo>
