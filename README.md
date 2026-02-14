@@ -1,5 +1,88 @@
-Git Out There
+# Git-Out-There – Project Retrospective and Overview
 
-Find open-source projects that need you!
+[Video Walkthrough](#)  
+[GitHub Repository](https://github.com/dayshaunlyy/Git-Out-There)
 
+---
 
+## Overview
+
+**Git-Out-There** is an Android application built with Kotlin that helps developers discover open-source repositories looking for contributors.
+
+The app uses the GitHub REST API to:
+
+- Browse repositories
+- View repository details
+- Explore open issues
+- Identify contribution opportunities
+- Save favorite repositories (authenticated users only)
+
+Guest users can freely browse repositories, while authenticated users can create an account, sign in, and save repositories to a personalized favorites list stored locally using Room.
+
+---
+
+### Features
+
+#### Guest Users
+- Browse repositories
+- View repository details
+- View open issues
+
+#### Authenticated Users
+- Create account
+- Sign in
+- Save repositories to favorites
+- View and manage saved repositories
+
+---
+
+## Introduction
+
+### Communication
+
+Team communication was managed through:
+- GitHub Issues for task tracking
+- GitHub Pull Requests for code review
+- In-person collaboration and discussion
+
+We relied on feature branches and PR reviews to minimize conflicts.
+
+### Stories / Issues
+
+- Initial stories planned: 12–15
+- Core stories completed:
+  - Authentication
+  - Repository browsing
+  - Favorites persistence
+  - API integration
+
+Some stretch features (advanced filtering, sorting, etc.) were considered but not fully implemented due to time constraints.
+
+---
+
+## Team Retrospective
+
+### Nate Towsley
+
+- [Pull Requests](https://github.com/dayshaunlyy/Git-Out-There/pulls?q=is%3Apr+is%3Aclosed+assignee%3Anatetowsley)
+- [Issues Created](https://github.com/dayshaunlyy/Git-Out-There/issues?q=is%3Aissue%20author%3Anatetowsley) 
+
+#### Role / Stories Worked On
+
+- Markdown rendering for README display
+- Account creation logic
+- Room database integration for Users
+- Compose UI testing
+
+#### Biggest Challenge
+
+Using regex to remove tags necessary so that repository README.md files could be displayed natively through app.
+
+##### Why was it a challenge?
+
+- Umfamiliarity with regex syntax
+- Certain icons (badges, etc) unable to be displayed
+
+##### How was the challenge addressed?
+
+- Research on regex tags and how to best edit raw md to be friendlier with interface
