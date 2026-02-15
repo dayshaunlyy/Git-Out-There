@@ -84,63 +84,62 @@ fun RepoListScreen(
 
     Column {
         if (!isGuest) {
-            Button(
-                onClick = onLogout,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp)
-                    .testTag("logout_button")
+                    .padding(top = 32.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Text("Log Out")
-            }
-        }
-        if (!isGuest) {
-            Button(
-                onClick = { showFavorites = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                Text("View Favorites")
-            }
-        }
-        if (showFavorites) {
-            FavoritesScreen(
-                userId = userId,
-                onBack = { showFavorites = false }
-            )
-            return
-        }
-
-
-
-
-        LazyColumn {
-            if (isGuest) {
-                item {
-                    Text(
-                        text = "Browsing as Guest",
-                        modifier = Modifier.padding(8.dp)
-                    )
+                Button(
+                    onClick = onLogout,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 4.dp)
+                        .testTag("logout_button")
+                ) {
+                    Text("Log Out")
+                }
+                Button(
+                    onClick = { showFavorites = !showFavorites },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 4.dp)
+                ) {
+                    Text(if (showFavorites) "View All" else "View Favorites")
                 }
             }
+        }
 
-            items(repos) { repo ->
-                val isFavorite = favorites.any { it.repoId == repo.id}
-
-                RepoItem(
-                    repo = repo,
-                    isFavorite = isFavorite,
-                    isGuest = isGuest,
-                    onFavoriteToggle = {
-                        favoritesViewModel.toggleFavorite(userId, repo)
-                    },
-                    onClick = {
-                        selectedRepo = repo
-                        selectedTab = 0
-                        readmeViewModel.loadReadme(repo.owner.login, repo.name)
+        if (showFavorites) {
+            FavoritesScreen(userId = userId)
+        } else {
+            LazyColumn {
+                if (isGuest) {
+                    item {
+                        Text(
+                            text = "Browsing as Guest",
+                            modifier = Modifier.padding(8.dp)
+                        )
                     }
-                )
+                }
+
+                items(repos) { repo ->
+                    val isFavorite = favorites.any { it.repoId == repo.id}
+
+                    RepoItem(
+                        repo = repo,
+                        isFavorite = isFavorite,
+                        isGuest = isGuest,
+                        onFavoriteToggle = {
+                            favoritesViewModel.toggleFavorite(userId, repo)
+                        },
+                        onClick = {
+                            selectedRepo = repo
+                            selectedTab = 0
+                            readmeViewModel.loadReadme(repo.owner.login, repo.name)
+                        }
+                    )
+                }
             }
         }
     }
@@ -238,8 +237,7 @@ fun RepoItem(
 
 @Composable
 fun FavoritesScreen(
-    userId: Int,
-    onBack: () -> Unit
+    userId: Int
 ) {
     val context = LocalContext.current
     val db = AppDatabase.getInstance(context)
@@ -255,33 +253,20 @@ fun FavoritesScreen(
         favoritesViewModel.loadFavorites(userId)
     }
 
-    Column {
-
-        Button(
-            onClick = onBack,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Text("Back")
-        }
-
-        LazyColumn {
-            items(favorites) { favorite ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Text(text = favorite.name)
-                        favorite.description?.let {
-                            Text(text = it)
-                        }
+    LazyColumn {
+        items(favorites) { favorite ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(text = favorite.name)
+                    favorite.description?.let {
+                        Text(text = it)
                     }
                 }
             }
         }
     }
 }
-
