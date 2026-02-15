@@ -87,7 +87,7 @@ Using regex to remove tags necessary so that repository README.md files could be
 
 - Research on regex tags and how to best edit raw md to be friendlier with interface
 
-- ### Tom Kerr
+### Tom Kerr
 
 - [Pull Requests](https://github.com/dayshaunlyy/Git-Out-There/pulls?q=is%3Apr+assignee%3Atkerr-csumb+is%3Aclosed)
 - [Issues Created](https://github.com/dayshaunlyy/Git-Out-There/issues?q=is%3Aissue%20author%3Atkerr-csumb) 
