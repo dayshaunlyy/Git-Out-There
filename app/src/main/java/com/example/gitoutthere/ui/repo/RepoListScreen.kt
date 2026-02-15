@@ -115,11 +115,15 @@ fun RepoListScreen(
         } else {
             LazyColumn {
                 if (isGuest) {
-                    item {
-                        Text(
-                            text = "Browsing as Guest",
-                            modifier = Modifier.padding(8.dp)
-                        )
+                    item{
+                        Button (
+                            onClick = onLogout,
+                            modifier = Modifier
+                                .fillMaxWidth(git )
+                                .padding(start = 8.dp)
+                        ){
+                            Text("Return")
+                        }
                     }
                 }
 
