@@ -86,3 +86,28 @@ Using regex to remove tags necessary so that repository README.md files could be
 ##### How was the challenge addressed?
 
 - Research on regex tags and how to best edit raw md to be friendlier with interface
+
+- ### Tom Kerr
+
+- [Pull Requests](https://github.com/dayshaunlyy/Git-Out-There/pulls?q=is%3Apr+assignee%3Atkerr-csumb+is%3Aclosed)
+- [Issues Created](https://github.com/dayshaunlyy/Git-Out-There/issues?q=is%3Aissue%20author%3Atkerr-csumb) 
+
+#### Role / Stories Worked On
+
+- Created .gitignore file
+- Logout button and function
+- Saving Favorites to profile
+
+#### Biggest Challenge
+
+Remembering how to use Android Studio/learning Kotlin in tandem with four other people
+
+##### Why was it a challenge?
+
+- Not knowing if the code I was making was implemented correctly
+- Time management and trying to get my work done so that my teammates could build off of it
+
+##### How was the challenge addressed?
+
+- Code review via pull requests and if something slipped through the cracks, debugging
+
