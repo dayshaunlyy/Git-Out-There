@@ -111,3 +111,26 @@ Remembering how to use Android Studio/learning Kotlin in tandem with four other 
 
 - Code review via pull requests and if something slipped through the cracks, debugging
 
+### Dayshaun Ly
+
+- [Pull Requests](https://github.com/dayshaunlyy/Git-Out-There/pulls?q=is%3Apr+author%3Adayshaunlyy+is%3Aclosed)
+- [Issues Created](https://github.com/dayshaunlyy/Git-Out-There/issues?q=is%3Aissue%20state%3Aclosed%20author%3Adayshaunlyy)
+
+#### Role / Stories Worked On
+
+- UI level coding
+- Favorites Functionality: UI, viewModel, factory
+- Guest User Feed
+
+#### Biggest Challenge
+
+- Researching and implementing star icons
+
+##### Why was it a challenge? 
+
+- Learning a new language while trying to get results within our time limit.
+
+##### How was the challenge addressed?
+
+- Had to take a lot of time out of the day to find certain work arounds.
+
