@@ -119,7 +119,7 @@ fun RepoListScreen(
                         Button (
                             onClick = onLogout,
                             modifier = Modifier
-                                .fillMaxWidth(git )
+                                .fillMaxWidth( )
                                 .padding(start = 8.dp)
                         ){
                             Text("Return")
