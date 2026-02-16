@@ -15,7 +15,7 @@ class RepoListScreenTest {
     fun guestUser_seesGuestBanner() {
         composeTestRule.setContent {
             GitOutThereTheme {
-                RepoListScreen(isGuest = true)
+                RepoListScreen(isGuest = true, userId = 1, onLogout = {})
             }
         }
 

@@ -4,6 +4,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.gitoutthere.ui.theme.GitOutThereTheme
+import com.example.gitoutthere.ui.repo.RepoListScreen
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -20,15 +22,16 @@ class LogoutTest {
         var logoutCalled = false
 
         composeTestRule.setContent {
-            MainScreen(
-                onLogout = { logoutCalled = true }
-            )
+            GitOutThereTheme {
+                RepoListScreen(isGuest = false, userId = 1, onLogout = {logoutCalled = true})
+            }
+
         }
 
         composeTestRule
             .onNodeWithTag("logout_button")
             .performClick()
 
-        assertTrue("Successfully logged out", logoutCalled)
+        assertTrue("onLogout should have been called", logoutCalled)
     }
 }
