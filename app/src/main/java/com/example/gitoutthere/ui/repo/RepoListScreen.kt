@@ -121,6 +121,7 @@ fun RepoListScreen(
                             modifier = Modifier
                                 .fillMaxWidth( )
                                 .padding(start = 8.dp)
+                                .testTag("return_button")
                         ){
                             Text("Return")
                         }
