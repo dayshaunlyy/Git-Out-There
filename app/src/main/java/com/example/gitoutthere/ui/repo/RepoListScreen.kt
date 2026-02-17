@@ -104,6 +104,7 @@ fun RepoListScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 4.dp)
+                        .testTag("favorites_button")
                 ) {
                     Text(if (showFavorites) "View All" else "View Favorites")
                 }
@@ -121,6 +122,7 @@ fun RepoListScreen(
                             modifier = Modifier
                                 .fillMaxWidth( )
                                 .padding(start = 8.dp)
+                                .testTag("return_button")
                         ){
                             Text("Return")
                         }

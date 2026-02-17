@@ -123,7 +123,7 @@ fun LoginScreen(
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("username_field")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -133,7 +133,7 @@ fun LoginScreen(
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("password_field")
         )
 
         if (error != null) {
@@ -148,7 +148,7 @@ fun LoginScreen(
 
         Button(
             onClick = { onLoginClick(username, password) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("login_button")
         ) {
             Text("Log In")
         }
