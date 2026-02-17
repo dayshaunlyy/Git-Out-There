@@ -6,6 +6,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.gitoutthere.ui.repo.FavoritesScreen
 import com.example.gitoutthere.ui.repo.RepoListScreen
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
 import org.junit.Rule
@@ -31,6 +32,28 @@ class FavoritesTest {
             .performClick()
 
         composeTestRule.onNodeWithText("View All").assertIsDisplayed()
+    }
+
+    @Test
+    fun repoListScreenRenders() {
+        composeTestRule.setContent {
+            GitOutThereTheme {
+                RepoListScreen(isGuest = false, userId = 1, onLogout = {})
+            }
+        }
+
+        // First click to go to favorites
+        composeTestRule
+            .onNodeWithTag("favorites_button")
+            .performClick()
+
+        composeTestRule.onNodeWithText("View All").assertIsDisplayed()
+
+        composeTestRule
+            .onNodeWithTag("favorites_button")
+            .performClick()
+
+        composeTestRule.onNodeWithText("View Favorites").assertIsDisplayed()
     }
 
 }

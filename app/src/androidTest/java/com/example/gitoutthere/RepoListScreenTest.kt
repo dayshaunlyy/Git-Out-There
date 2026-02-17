@@ -4,6 +4,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.gitoutthere.api.OwnerDto
 import com.example.gitoutthere.api.RepoDto
@@ -29,6 +30,23 @@ class RepoListScreenTest {
             GitOutThereTheme {
                 RepoListScreen(isGuest = true, userId = 1, onLogout = {logoutCalled = true})
             }
+        }
+
+        composeTestRule
+            .onNodeWithTag("return_button")
+            .assertIsDisplayed()
+
+    }
+
+    @Test
+    fun clickingReturn_callsOnLogout() {
+        var logoutCalled = false
+
+        composeTestRule.setContent {
+            GitOutThereTheme {
+                RepoListScreen(isGuest = true, userId = 1, onLogout = {logoutCalled = true})
+            }
+
         }
 
         composeTestRule
