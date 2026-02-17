@@ -104,6 +104,7 @@ fun RepoListScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 4.dp)
+                        .testTag("favorites_button")
                 ) {
                     Text(if (showFavorites) "View All" else "View Favorites")
                 }

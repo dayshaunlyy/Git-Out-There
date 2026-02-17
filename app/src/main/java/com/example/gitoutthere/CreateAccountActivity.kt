@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.example.gitoutthere.ui.theme.GitOutThereTheme
 import androidx.activity.viewModels
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import com.example.gitoutthere.auth.CreateAccountViewModel
 import com.example.gitoutthere.auth.CreateAccountViewModelFactory
 import com.example.gitoutthere.database.repository.UserRepository
@@ -78,7 +79,7 @@ fun CreateAccountScreen(
             value = username,
             onValueChange = { username = it },
             label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag("username_field"),
             isError = usernameError != null
         )
         usernameError?.let {
@@ -96,14 +97,14 @@ fun CreateAccountScreen(
             onValueChange = { password = it },
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("password_field")
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = { onCreateAccountClick(username, password) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().testTag("create_account_button")
         ) {
             Text("Create Account")
         }
