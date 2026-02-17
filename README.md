@@ -1,6 +1,6 @@
 # Git-Out-There – Project Retrospective and Overview
 
-[Video Walkthrough](#)  
+[Video Walkthrough](https://www.youtube.com/watch?v=RhmnjzB2HEU)  
 [GitHub Repository](https://github.com/dayshaunlyy/Git-Out-There)
 
 ---
