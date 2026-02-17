@@ -134,3 +134,29 @@ Remembering how to use Android Studio/learning Kotlin in tandem with four other 
 
 - Had to take a lot of time out of the day to find certain work arounds.
 
+### Brandon Hernandez-Cano
+
+- [Pull Requests](https://github.com/dayshaunlyy/Git-Out-There/issues?q=state%3Aclosed%20is%3Apr%20author%3AS0nbr4ndonz+is%3Aclosed)
+- [Issues Created](https://github.com/dayshaunlyy/Git-Out-There/issues?q=is%3Aissue%20state%3Aclosed%20author%3AS0nbr4ndonz)
+
+#### Role / Stories Worked On
+
+- Log in logic
+- Log in error
+- Pulling data from REST API
+- Formatting data pulled from REST API
+
+#### Biggest Challenge
+
+- The biggest challenge was definitely learning to fetch and structure data from a REST API using kotlin. Particularly, properly modeling the data fetched in JSON format to work with Kotlin models.
+
+##### Why was it a challenge? 
+
+- It was required to simulatenously learn Kotlin, re-learn and apply Android development patterns, understand how interfaces, data classes, and repositories interact with one another, and mapping JSON responses into Kotlin models.
+
+##### How was the challenge addressed?
+
+- By dedicating more time outside of coding to study kotlin fundamentals, android architecture, and the Retrofit library, I was able to develop a better understanding of how data modeling and networking collaborate in an android application.
+
+
+
