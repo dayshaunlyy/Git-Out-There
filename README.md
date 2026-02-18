@@ -220,3 +220,25 @@ Brandon handled authentication and data integration, implementing login logic an
 ##### What is the most valuable thing you learned?
 
 The most valuable lesson I learned through this project was how important it is to identify what is absolutely necessary in a product and focusing on that first instead of trying to get all the wants done.
+
+--- 
+## Conclusion
+
+##### How successful was the project?
+
+Overall, the project was successful as a Minimum Viable Product. It meets all of the requirements listed in the Project prompt. However, if the enhanced features such as advanced filtering, pull request tracking, and personal profile were able to be implemented, Git Out There could have differentiated itself as a standalone app instead of an interface layered over GitHub.
+
+##### What was the largest victory?
+Our greatest achievement was successfully integrating dynamic GitHub data into a responsive and interactive UI.
+
+- Live repository listing from GitHub API
+
+- Repository detail modal with tabbed interface
+      - Issue tab displaying labeled issued
+      - README tab rendering repository documentation
+
+- Smooth UI updates when navigating between views
+
+##### Final assessment of the project
+
+Git Out There has strong potential for future expansion as an app. As a team, we are proud of what we accomplished within the given time constraints and confident that the foundation we built could support further feature enhancements
