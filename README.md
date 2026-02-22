@@ -82,7 +82,7 @@ Using regex to remove tags necessary so that repository README.md files could be
 
 ##### Why was it a challenge?
 
-- Umfamiliarity with regex syntax
+- Unfamiliarity with regex syntax
 - Certain icons (badges, etc) unable to be displayed
 
 ##### How was the challenge addressed?
